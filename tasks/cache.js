@@ -18,9 +18,9 @@ module.exports = function(grunt) {
 		//already has ts, just update md5
 		if(assetName.indexOf('?t=')>=0){
 			newurl = assetName.substring(0,assetName.length-8) + md5;
-			
+
 		}else{
-			
+
 			newurl = assetName + '?t=' + md5;
 		}
 
@@ -38,20 +38,20 @@ module.exports = function(grunt) {
 			var assetData=grunt.file.read(assetUrl);
 			//remove the directory
 			assetUrl=assetUrl.substring(assetUrl.lastIndexOf('/'),assetUrl.length);
-			
+
 			//if the page file has the asset
 			if (data.indexOf(assetUrl) >= 0) {
-				
+
 				var md5sum = crypto.createHash('md5');
 				md5sum.update(assetData, 'utf-8');
-				
+
 				//get the full asset text, like "text/javascript" src="js/hello.js?t=cefe2283"
-				var reg=new RegExp('".*'+assetUrl+'.*"','g');
+				var reg=new RegExp('"\\S*'+assetUrl+'\\S*"','g');
 				var fullAssetUrl=reg.exec(data).toString();
-				
+
 				//only leave hello.js?t=cefe2283
 				var assetName=fullAssetUrl.substring(fullAssetUrl.indexOf(assetUrl),fullAssetUrl.length-1);
-				
+
 				var newurl = getNewAssetsUrl(assetName, md5sum.digest('hex'));
 				var newdata = data.replace(assetName, newurl);
 
